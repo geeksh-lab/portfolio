@@ -1,14 +1,11 @@
-FROM node:15.12.0
-
+FROM node:16.13.1 as build-stage
 WORKDIR /app
-
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-ADD . .
-
+COPY package*.json ./
 RUN npm install
-
-ENTRYPOINT ["/entrypoint.sh"]
-EXPOSE 3000
-CMD ["npm", "run", "dev"]
+COPY ./ .
+RUN  npm run build
+COPY assets /app/dist/images
+FROM nginx
+RUN mkdir /app
+COPY --from=build-stage /app/dist/ /app
+COPY nginx.conf /etc/nginx/nginx.conf

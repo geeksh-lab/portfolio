@@ -79,3 +79,6 @@ canvas {
   .left {
     grid-column: 6 / 12;
   }
+  .letter {
+    font-size: 25px;
+  }
